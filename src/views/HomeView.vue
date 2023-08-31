@@ -15,12 +15,16 @@ export default {
       serverIP,
       serverPort,
       baseUrl: `http://${serverIP}:${serverPort}`,
-      itemSize: 50
+      itemSize: 50,
+      maxGridItems: 9
     }
   },
   computed: {
     gridItems() {
-      return Math.min(Math.floor((window.innerWidth - this.itemSize * 2) / this.itemSize), 9)
+      return Math.min(
+        Math.floor((window.innerWidth - this.itemSize * 2) / this.itemSize),
+        this.maxGridItems
+      )
     },
     scrollerWidth() {
       return `${this.itemSize * this.gridItems}px`
@@ -29,7 +33,27 @@ export default {
   methods: {
     setActive(emoji: EmojiData) {
       this.activeEmoji = emoji
+    },
+    move(dir: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT') {
+      const amount = ['UP', 'DOWN'].includes(dir) ? this.gridItems : 1
+      const sign = ['DOWN', 'RIGHT'].includes(dir) ? 1 : -1
+      const index = emojiData.findIndex((emoji) => emoji.unicode === this.activeEmoji.unicode)
+
+      this.setActive(emojiData[(index + amount * sign) % emojiData.length])
+      ;(this.$refs.scroller as any).scrollToItem(index)
+    },
+    keyHandler(event: KeyboardEvent) {
+      if (event.key === 'ArrowDown') this.move('DOWN')
+      else if (event.key === 'ArrowUp') this.move('UP')
+      else if (event.key === 'ArrowLeft') this.move('LEFT')
+      else if (event.key === 'ArrowRight') this.move('RIGHT')
     }
+  },
+  created() {
+    window.addEventListener('keyup', this.keyHandler)
+  },
+  beforeUnmount() {
+    window.removeEventListener('keyup', this.keyHandler)
   },
   components: { Emoji, Inspector }
 }
@@ -41,6 +65,7 @@ export default {
   >
     <Inspector class="sticky" :url="`${baseUrl}/${activeEmoji.unicode}`" />
     <RecycleScroller
+      ref="scroller"
       class="h-full overflow-y-auto no-scrollbar"
       key-field="unicode"
       item-class="inline-flex items-center justify-center"
