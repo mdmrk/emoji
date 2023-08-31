@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::before,
+*::after {
+  @apply box-border m-0 p-0 font-bold;
+}
+
+html,
+body,
+#app {
+  @apply !min-h-full h-full;
+}
+
+html {
+  @apply text-white leading-5 text-lg font-sans antialiased bg-gradient-to-br from-primary to-secondary;
+}
+
+main {
+  @apply h-full px-4 py-6 max-w-4xl mx-auto;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@layer utilities {
+  @variants responsive {
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+  }
+}
