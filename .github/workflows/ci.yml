@@ -1,6 +1,9 @@
 # Simple workflow for deploying static content to GitHub Pages
 name: deploy
 
+env:
+  VITE_SERVER_IP: https://orchid-jodhpurs.cyclic.app
+
 on:
   # Runs on pushes targeting the default branch
   push:
