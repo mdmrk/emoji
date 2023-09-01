@@ -4,8 +4,8 @@ import Inspector from '@/components/Inspector.vue'
 import emojiData from '@/assets/data.json'
 import type { EmojiData } from '@/types'
 
-const serverIP = '192.168.100.7'
-const serverPort = '3000'
+const serverIP = import.meta.env.VITE_SERVER_IP || '0.0.0.0'
+const serverPort = import.meta.env.VITE_SERVER_PORT || '3000'
 
 export default {
   data() {
@@ -37,9 +37,12 @@ export default {
     move(dir: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT') {
       const amount = ['UP', 'DOWN'].includes(dir) ? this.gridItems : 1
       const sign = ['DOWN', 'RIGHT'].includes(dir) ? 1 : -1
-      const index = emojiData.findIndex((emoji) => emoji.unicode === this.activeEmoji.unicode)
+      const index =
+        (emojiData.findIndex((emoji) => emoji.unicode === this.activeEmoji.unicode) +
+          amount * sign) %
+        emojiData.length
 
-      this.setActive(emojiData[(index + amount * sign) % emojiData.length])
+      this.setActive(emojiData[index])
       ;(this.$refs.scroller as any).scrollToItem(index)
     },
     keyHandler(event: KeyboardEvent) {
@@ -84,5 +87,3 @@ export default {
     </RecycleScroller>
   </div>
 </template>
-
-<style></style>
