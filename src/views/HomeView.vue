@@ -14,7 +14,7 @@ export default {
       activeEmoji: emojiData[0],
       serverIP,
       serverPort,
-      baseUrl: `http://${serverIP}:${serverPort}`,
+      baseUrl: `${serverIP}`,
       itemSize: 50,
       maxGridItems: 9
     }
